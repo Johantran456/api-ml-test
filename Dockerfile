@@ -34,9 +34,17 @@ RUN pip install --no-cache-dir --upgrade pip \
 COPY app/ ./app/
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Pre-download the YOLOv8 model weights at build time so the container does
+# not need to fetch them from the internet at startup (Cloud Run would time
+# out waiting for the port to open while the download runs).
+# ─────────────────────────────────────────────────────────────────────────────
+RUN python -c "from ultralytics import YOLO; YOLO('yolov8n.pt')"
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Expose the port and run the API
+# Cloud Run injects PORT at runtime; default is 8080.
 # ─────────────────────────────────────────────────────────────────────────────
 EXPOSE 8080
 
-# Use exec form to ensure proper signal handling (PID 1 = uvicorn)
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]# Stage: base runtime image
+# Shell form is required so $PORT is expanded at runtime.
+CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT}
