@@ -77,6 +77,7 @@ jobs:
             --platform managed \
             --region ${{ secrets.GCP_REGION }} \
             --memory 2Gi \
+            -- timeout 300 \
             --allow-unauthenticated \
             --project ${{ secrets.GCP_PROJECT_ID }} \
             --quiet
