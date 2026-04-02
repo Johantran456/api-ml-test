@@ -1,6 +1,6 @@
 # YOLOv8 Object Detection API
 
-Test Counter = 2
+Test Counter = 3
 
 A production-ready REST API that wraps **YOLOv8** (Ultralytics) and exposes it over **FastAPI**.  
 Images are uploaded via HTTP, and the API returns structured JSON detections (class, confidence, bounding box).  
